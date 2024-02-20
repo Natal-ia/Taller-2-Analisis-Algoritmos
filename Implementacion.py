@@ -1,19 +1,19 @@
-def adivinador(pensador, inicio, fin):
-    if inicio <= fin:
-        medio = (inicio + fin) // 2
-        respuesta = pensador(medio)
-        if respuesta == 0:
-            return medio
-        elif respuesta == 1:
-            return adivinador(pensador, inicio, medio - 1)
+def adivinador(k, b, e):
+    if b <= e:
+        q = (b + e) // 2
+        response = getGuessResponse(q)
+        if response == 0:
+            return q
+        elif response == 1:
+            return adivinador(k, b, q - 1)
         else:
-            return adivinador(pensador, medio + 1, fin)
+            return adivinador(k, q + 1, e)
     else:
         return None
 
-def pensador(numero_pensado):
-    suposicion = int(input("¿Es " + str(numero_pensado) + "? (0: Igual, 1: Menor, 2: Mayor): "))
-    return suposicion
+def getGuessResponse(pivote):
+    response = int(input("¿Es " + str(pivote) + "? (0: Igual, 1: Menor, 2: Mayor): "))
+    return response
 
 def jugar_adivinar_numero():
     numero_pensado = int(input("Piense en un numero natural: "))
@@ -25,7 +25,7 @@ def jugar_adivinar_numero():
     if numero_pensado < intervalo_min or numero_pensado>intervalo_max:
         print("El numero pensado debe estar dentro del intervalo")
         jugar_adivinar_numero()
-    respuesta = adivinador(pensador, intervalo_min, intervalo_max)
+    respuesta = adivinador(numero_pensado, intervalo_min, intervalo_max)
     if respuesta is None:
         print("El adivinador no pudo encontrar el número.")
     else:
