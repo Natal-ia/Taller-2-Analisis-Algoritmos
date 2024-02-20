@@ -1,0 +1,141 @@
+%% LyX 2.3.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[twoside,spanish]{elsarticle}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\pagestyle{headings}
+\usepackage{float}
+\usepackage{amssymb}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}
+\providecommand{\algorithmname}{Algoritmo}
+\floatname{algorithm}{\protect\algorithmname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% specify here the journal
+\journal{Curso de <<Análisis de algoritmos>>, PUJ, Bogota, Colombia - }
+
+% use this if you need line numbers
+
+\makeatother
+
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>}}
+
+\begin{document}
+
+\begin{frontmatter}{}
+
+\title{Juego de adivinar un número \tnoteref{t1,t2}}
+
+\tnotetext[t1]{Este documento presenta la escritura formal de un algoritmo.}
+
+\author[nme]{Natalia Mejía Estrada}
+
+\ead{nataliamejia@javeriana.edu.co}
+
+\address[nme]{Pontificia Universidad Javeriana, Bogotá, Colombia}
+
+\begin{abstract}
+En este documento se presenta la escritura formal del problema <<Juego de adivinar un número>> junto con un algoritmo de solución de tipo dividir-y-vencer.
+
+\end{abstract}
+\begin{keyword}
+algoritmo, escritura formal, juego, adivinar número.
+\end{keyword}
+
+\end{frontmatter}{}
+
+\section{Análisis del problema}
+
+El juego de adivinar un numero se juega entre dos personas: una de ellas piensa en un número natural y la otra intenta adivinarlo dando algunas posibles respuestas. En cada turno, el adivinador da un conjunto de n números y el pensador indica para cada número, si es mayor, menor o igual.
+
+\section{Diseño del problema}
+
+El análisis anterior nos permite diseñar el problema: definir las
+entradas y salidas de un posible algoritmo de solución, que aun no
+esta definido.
+
+\begin{enumerate}
+\item \emph{\uline{Entradas}}: Número real \( k \): \( k \in \mathbb{R} \) \newline
+Límite inferior del intervalo \( b \): \( b < k \) \newline
+Límite superior del intervalo \( e \): \( e > k \) y \( e > b \) \newline
+Categorización de los intentos de adivinar: 
+\begin{itemize}
+    \item $0$: Igual
+    \item $1$: Menor
+    \item $2$: Mayor
+\end{itemize}
+
+\item \emph{\uline{Salidas}}: 
+La retroalimentación del pensador sobre cada suposición del adivinador es:
+Mayor // Menor // Igual \\
+El número adivinado por el adivinador, si es correcto, es una cadena de texto que representa el número adivinado (a) tal que  \(a = k.\)
+
+\end{enumerate}
+
+\section{Algoritmos de solución}
+
+\subsection{Algoritmo dividir-y-vencer}
+
+Este algoritmo de solución usa la estrategia de dividir y vencer para hallar la solución al problema.
+
+\begin{algorithm}[H]
+
+\begin{algorithmic}[1]
+
+\Require{\( k \): \( k \in \mathbb{R} \)}
+
+\Require{\( b \): \( b < k \)}
+
+\Require{\( e \): \( e > k \) y \( e > b \)}
+
+\Procedure{Adivinar}{$k$, $b$, $e$}
+
+  \If {$b <= e $}
+
+  \State$q\leftarrow{b+e/2}$
+  
+\State${response}\leftarrow{getGuessResponse}\left(q\right)$
+    \If{$response=0$}
+        \State\Return $0$
+    \EndIf
+    \If{$response=1$}
+        \State\Return ${Adivinar}\left({k, b, q-1}\right)$
+    \EndIf
+    \If{$response=2$}
+        \State\Return ${Adivinar}\left({k, q+1, e}\right)$
+    \Else
+        \State\Return
+    \EndIf
+\EndIf
+\EndProcedure
+\end{algorithmic}
+
+\caption{Algoritmo usando dividir y vencer para jugar el juego de adivinar un numero.}
+\end{algorithm}
+
+\subsubsection{Invariante}
+
+Durante el algoritmo, se mantiene que el inicio {$b$} siempre es menor que el fin {$e$} y que el número pensado {$k$}estará dentro del rango especificado por inicio y fin. Adicionalmente, debido a la respuesta del pensador o {$getGuessResponse$} (mayor, menor o igual), el algoritmo puede tomar la decisión de si la respuesta es: 
+\\1 (menor), significa que el número pensado es menor que el número en el punto medio y actualiza el límite superior del intervalo (fin) al punto medio menos uno y continúa la búsqueda en la mitad inferior; 
+\\2 (mayor), significa que el número pensado es mayor que el número en el punto medio, entonces se actualiza el límite inferior del intervalo (inicio) al punto medio más uno y continúa la búsqueda en la mitad superior; 
+\\0(igual), significa que el número medio es igual al pensado y es correcto. 
+
+\subsubsection{Análisis de complejidad}
+Como se puede notar, el algoritmo tiene 2 recurrencias, y adicionalmente el pivote se define dividiendo el intervalo entre 2. Esto significa que se tiene una complejidad temporal de {$T\left(n\right)=2T(n\div 2) + O(1)$}. 
+Por teorema maestro, se sabe que esta complejidad corresponde a {$\theta(n)$} igual a los previamente hechos en clase.
+
+\subsubsection{Notas de implementación}
+Para las entradas, se debe verificar que el numero a adivinar este dentro del intervalo, que el intervalo sea coherente al numero a adivinar y la respuesta a cada adivinación introducida por el usuario, corresponda a uno de los 3 valores. Dentro del procedimiento no es necesario el uso de k pero se pone para hacer comprobaciones frente al intervalo. 
+
+\end{document}
